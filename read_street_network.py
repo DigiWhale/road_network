@@ -12,4 +12,4 @@ osm = OSM(fp)
 # Read all drivable roads
 # =======================
 drive_net = osm.get_network(network_type="driving")
-drive_net.plot()
+print(drive_net)
