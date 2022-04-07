@@ -38,7 +38,7 @@ def df_to_geojson(df, properties, lat='jetson_rpi_lat', lon='jetson_rpi_lng'):
 location = 'maryland'
 #Load route from rpi file
 df = pd.read_csv("master_log.csv")
-geoj = df_to_geojson(df, [])
+geoj = df_to_geojson(df, ["distance"])
 with open('{}.geojson'.format(location), 'w+') as f:
   f.write(geojson.dumps(geoj))
   f.close()
