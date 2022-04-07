@@ -6,6 +6,7 @@ from operator import itemgetter
 import numpy as np
 from scipy.spatial import cKDTree
 from shapely.geometry import Point, LineString
+import geojson
 
 
 def ckdnearest(gdfA, gdfB, gdfB_cols=['Place']):
@@ -21,11 +22,26 @@ def ckdnearest(gdfA, gdfB, gdfB_cols=['Place']):
     gdf = pd.concat(
         [gdfA, gdfB.loc[idx, gdfB_cols].reset_index(drop=True), pd.Series(dist, name='dist')], axis=1)
     return gdf
+  
+def df_to_geojson(df, properties, lat='jetson_rpi_lat', lon='jetson_rpi_lng'):
+    df.fillna(0, inplace=True)
+    geojson = {'type':'FeatureCollection', 'features':[]}
+    for _, row in df.iterrows():
+        feature = {'type':'Feature','properties':{},'geometry':{'type':'Point','coordinates':[]}}
+        feature['geometry']['coordinates'] = [row[lon],row[lat]]
+        for prop in properties:
+            feature['properties'][prop] = row[prop]
+        geojson['features'].append(feature)
+    return geojson
 
 #sert location file to use
 location = 'maryland'
 #Load route from rpi file
 df = pd.read_csv("master_log.csv")
+geoj = df_to_geojson(df, [])
+with open('{}.geojson'.format(location), 'w+') as f:
+  f.write(geojson.dumps(geoj))
+  f.close()
 #convert rpi lat/lon to geopandas points
 rpi_route = geopandas.GeoDataFrame(df, geometry=geopandas.points_from_xy(df['jetson_rpi_lat'], df['jetson_rpi_lng']))
 #load shape file
