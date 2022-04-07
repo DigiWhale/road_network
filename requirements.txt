@@ -1,2 +1,4 @@
 geopandas
 pyrosm
+matplotlib
+rtree

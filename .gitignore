@@ -1,1 +1,10 @@
-.venv
+venv
+*.pbf
+*.cpg
+*.dbf
+*.prj
+*.shp
+*.shx
+*.html
+*.png
+*.svg
